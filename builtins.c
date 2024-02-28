@@ -20,14 +20,13 @@
 int
 echo (char *message)
 {
-
   char *key;
   char *value;
-  char *token = strtok( message, "${");
   
   //if (token != NULL) 
   if (strstr(message, "${") != NULL)
     {
+      char *token = strtok( message, "${");
       key = strdup(token);
       token = strtok(NULL, "${");
       if (token != NULL)
@@ -40,7 +39,6 @@ echo (char *message)
         }
       char *value2 = hash_find (value);
       if (value2 == NULL) {
-        // printf("NULL: %s,%s,%s\n", key, value, value2);
         printf("%s\n", key);
         free (key);
         free (value);
