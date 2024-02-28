@@ -98,9 +98,19 @@ run_builtin (char *cmd, char *argv[])
 int
 run_single (char *cmd, char *argv[])
 {
+  int pipe_fd[2];
+  if (pipe (pipe_fd) == -1)
+    {
+      return -1;
+    }
+
   pid_t pid = fork ();
   if (pid == 0)
     {
+      close (pipe_fd[0]);
+      dup2 (pipe_fd[1], STDOUT_FILENO);
+      close (pipe_fd[1]);
+
       if (is_builtin (cmd) == 1)
         {
           exit (run_builtin (cmd, argv));
@@ -122,29 +132,34 @@ run_single (char *cmd, char *argv[])
     }
   else if (pid > 0)
     {
+      close (pipe_fd[1]);
+      char buffer[BUFSIZ];
+      ssize_t bytes;
+      while ((bytes = read (pipe_fd[0], buffer, sizeof (buffer))) > 0)
+        {
+          write (STDOUT_FILENO, buffer, bytes);
+        }
+
+      close (pipe_fd[0]);
+
       int stat;
 
-      while (waitpid (pid, &stat, 0) == -1)
+      if (waitpid (pid, &stat, 0) != -1)
         {
-          if (errno != EINTR)
+          if (WIFEXITED (stat))
             {
-              perror ("waitpid");
-              break;
+              return WEXITSTATUS (stat);
+            }
+          else
+            {
+              return -1;
             }
         }
-      if (WIFEXITED (stat))
-        {
-          return WEXITSTATUS (stat);
-        }
       else
-        {
-          return -1;
-        }
+        return -1;
     }
-  else
-    {
-      return -1;
-    }
+  perror ("fork");
+  return -1;
 }
 
 int
