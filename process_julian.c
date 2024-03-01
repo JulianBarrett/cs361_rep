@@ -20,17 +20,16 @@
 int
 echo (char *message)
 {
-
-  if (strncmp(message, "$?", 2) == 0) 
-    {
-      char *value = hash_find (".?");
-      printf ("%s\n", value); // print the mapping
-      return 0;
-    }
+      if (strncmp(message, "$?", 2) == 0) 
+        {
+          char *value = hash_find (".?");
+          printf ("%s\n", value); // print the mapping
+          return 0;
+        }
 
   char *key;
   char *value;
-  
+
   //if (token != NULL) 
   if (strstr(message, "${") != NULL)
     {
@@ -116,9 +115,11 @@ export (char *kvpair)
 int
 pwd (void)
 {
+  // hash_dump();
   char cwd[1024];
   getcwd(cwd, sizeof(cwd));
   printf("%s\n", cwd);
+  hash_insert (".?", "1");
   return 0;
 }
 

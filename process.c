@@ -96,7 +96,7 @@ run_builtin (char *cmd, char *argv[])
 }
 
 int
-run_single (char *cmd, char *argv[])
+run_single (char *cmd, char *argv[], char *envp[])
 {
   int pipe_fd[2];
   if (pipe (pipe_fd) == -1)
@@ -119,7 +119,7 @@ run_single (char *cmd, char *argv[])
         {
           if (cmd != NULL)
             {
-              execv (cmd, argv);
+              execvp (cmd, argv, envp);
               exit (EXIT_FAILURE);
             }
           else
@@ -140,6 +140,12 @@ run_single (char *cmd, char *argv[])
           write (STDOUT_FILENO, buffer, bytes);
         }
 
+        // if (strncmp (buffer, "Directory does not exist.")   {
+        //hash_insert (".?", "1");
+        // } else { 
+        // hash_insert (".?", "1");
+        //} 
+        
       close (pipe_fd[0]);
 
       int stat;
@@ -162,6 +168,8 @@ run_single (char *cmd, char *argv[])
   return -1;
 }
 
+
+// need to replace execv with execvp
 int
 run_piped (char *cmd1, char *cmd2, char *argv1[], char *argv2[])
 {

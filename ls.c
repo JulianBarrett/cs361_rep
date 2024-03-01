@@ -76,7 +76,7 @@ list (char *dir_path, int show_all, int show_sizes)
   if (dir == NULL)
     {
       perror ("Directory does not exist.");
-      return;
+      return 1;
     }
 
   struct dirent *entry;
