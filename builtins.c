@@ -21,7 +21,7 @@ int
 echo (char *message)
 {
 
-  if (strncmp(message, "$?", 2) == 0) 
+  if (strncmp(message, "$?", 2) == 0)
     {
       char *value = hash_find (".?");
       printf ("%s\n", value); // print the mapping

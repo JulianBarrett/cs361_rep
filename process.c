@@ -143,7 +143,7 @@ run_single (char *cmd, char *argv[], char *envp[])
         // if (strncmp (buffer, "Directory does not exist.")   {
         //hash_insert (".?", "1");
         // } else { 
-        // hash_insert (".?", "1");
+        // hash_insert (".?", "0");
         //} 
         
       close (pipe_fd[0]);

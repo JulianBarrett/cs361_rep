@@ -75,7 +75,7 @@ list (char *dir_path, int show_all, int show_sizes)
   DIR *dir = opendir (dir_path);
   if (dir == NULL)
     {
-      perror ("Directory does not exist.");
+      printf ("Directory does not exist.");
       return 1;
     }
 
