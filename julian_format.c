@@ -38,11 +38,11 @@ dump_msg (FILE *output, msg_t *msg, size_t size)
     {
       fprintf(output, "Client Ethernet Address (chaddr) = ");
       for (int i = 0; i < msg->hlen; i++) {
-        if (msg->chaddr[i] != 00) {
+        // if (msg->chaddr[i] != 00) {
           fprintf(output, "%02x", msg->chaddr[i]);
-        } else if (msg->chaddr[i + 1] != 00) {
-          fprintf(output, "%02x", msg->chaddr[i]);
-        }
+        // } else if (msg->chaddr[i + 1] != 00) {
+        //   fprintf(output, "%02x", msg->chaddr[i]);
+        // }
       }
       fprintf(output, "\n");
     }
@@ -101,6 +101,10 @@ dump_msg (FILE *output, msg_t *msg, size_t size)
 
       if (msg->options == DHCPDECLINE || msg->options == DHCPREQUEST)
         {
+          // for (int i = 0; i < 9; i++)
+          //   {
+          //         fprintf(output, "%d.", msg->optionsBlock[i]);
+          //   }
 
           fprintf(output, "Request = ");
           if (msg->optionsBlock[0] == 50)
