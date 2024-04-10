@@ -23,35 +23,37 @@ main(int argc, char **argv) {
     size_t size = 0;
     dump_msg(stdout, msg, size);
 
-    int sockfd;
-    struct sockaddr_in servaddr;
+    if (argc > 1 && strcmp(argv[1], "-p") == 0)
+      {
+        int sockfd;
+      struct sockaddr_in servaddr;
 
-    // Creating socket file descriptor
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sockfd < 0) {
-        perror("socket");
-        return EXIT_FAILURE;
-    }
+      sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+      if (sockfd < 0)
+        {
+          perror("socket!!!");
+          return EXIT_FAILURE;
+        }
 
-    memset(&servaddr, 0, sizeof(servaddr));
+      memset(&servaddr, 0, sizeof(servaddr));
 
-    // Filling server information
-    servaddr.sin_family = AF_INET; // IPv4
-    servaddr.sin_port = htons(atoi(get_port())); // Get custom port number
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // Hardcoded server IP
+      servaddr.sin_family = AF_INET;
+      servaddr.sin_port = htons(atoi(get_port()));
+      servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-    // Sending message to server
-    if (sendto(sockfd, msg, sizeof(msg_t), 0,
-               (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
-        perror("sendto failed");
-        close(sockfd);
-        free(msg);
-        return EXIT_FAILURE;
-    }
+      if (sendto(sockfd, msg, sizeof(msg_t), 0,
+               (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+        {
+          perror("failed");
+          close(sockfd);
+          free(msg);
+          return EXIT_FAILURE;
+        }
 
-    close(sockfd);
-    free(msg);
-    return EXIT_SUCCESS;
+      close(sockfd);
+      }
+      free(msg);
+      return EXIT_SUCCESS;
 }
 
 static bool
@@ -95,7 +97,6 @@ get_args2 (int argc, char **argv, msg_t *msg)
   optionsCount += sizeof(uint32_t);
 
   optionsCount = 0;
-  // NEED TO ADD DEFFAULT VALUES FOR R AND Sjiofdssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
 
   for (int i = 1; i < argc; i++)
     {
@@ -113,7 +114,7 @@ get_args2 (int argc, char **argv, msg_t *msg)
                     case 't':
                         if (i + 1 < argc)
                           {
-                            msg->htype = atoi(argv[++i]); // Convert hardware type to int
+                            msg->htype = atoi(argv[++i]);
                             msg->hlen = getDHCPLenType(msg->htype);
                           }
                         break;
@@ -126,12 +127,11 @@ get_args2 (int argc, char **argv, msg_t *msg)
                               {
                                 return false;
                               }
-                            // Convert each pair of characters to a byte
                             for (size_t j = 0; j < input_length; j += 2)
                               {
-                                char byte_str[3] = {input[j], input[j + 1], '\0'};  // Extract two characters
-                                uint8_t byte = (uint8_t)strtoul(byte_str, NULL, 16);  // Convert to byte
-                                msg->chaddr[j / 2] = byte;  // Store the byte in chaddr
+                                char byte_str[3] = {input[j], input[j + 1], '\0'};
+                                uint8_t byte = (uint8_t)strtoul(byte_str, NULL, 16);
+                                msg->chaddr[j / 2] = byte;
                               }
                           }
                         break;
