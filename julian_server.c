@@ -20,6 +20,7 @@ static bool get_args (int, char **);
 static bool debug = false;
 static uint16_t port;
 
+
 static bool get_args(int, char **);
 
 int main(int argc, char **argv) {
